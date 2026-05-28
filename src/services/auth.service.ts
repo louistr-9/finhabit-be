@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 export class AuthService {
 
     async register(email: string, name: string, password: string) {
-
         const existingUser = await prisma.user.findUnique({
             where: { email },
         });
@@ -55,4 +54,37 @@ export class AuthService {
         };
     }
 
+    async googleLogin(email: string, name: string, avatarUrl: string) {
+        let user = await prisma.user.findUnique({ where: { email } });
+        
+        if (!user) {
+            const randomPassword = await bcrypt.hash(Math.random().toString(36).slice(-10), 10);
+            user = await prisma.user.create({
+                data: {
+                    email,
+                    name,
+                    password: randomPassword,
+                    avatarUrl
+                }
+            });
+        } else if (!user.avatarUrl && avatarUrl) {
+            user = await prisma.user.update({
+                where: { email },
+                data: { avatarUrl }
+            });
+        }
+
+        const token = jwt.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET as string,
+            { expiresIn: "7d" }
+        );
+
+        const { password: _, ...userWithoutPassword } = user;
+
+        return {
+            user: userWithoutPassword,
+            token,
+        };
+    }
 }

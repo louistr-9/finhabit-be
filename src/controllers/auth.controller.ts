@@ -40,6 +40,25 @@ export class AuthController {
         }
     }
 
+    async googleLogin(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email, name, avatarUrl } = req.body;
+            if (!email || !name) {
+                return res.status(400).json({ success: false, message: "Thiếu thông tin Google" });
+            }
+
+            const result = await authService.googleLogin(email, name, avatarUrl || "");
+
+            res.status(200).json({
+                success: true,
+                message: "Đăng nhập Google thành công!",
+                data: result,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async syncProfile(req: Request, res: Response, next: NextFunction) {
         try {
             const { email, name, avatarUrl, initialBalance, monthlyBudget, telegramChatId, discordUserId, geminiApiKey } = req.body;
