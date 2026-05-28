@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "lib": [
+      "DOM",
+      "ES2022"
+    ],
+    "strict": true, /* Bật Strict Mode chuẩn */
+    "noImplicitAny": true, /* Cấm kiểu any ngầm định */
+    "strictNullChecks": true, /* Kiểm soát tuyệt đối null/undefined */
+    "strictPropertyInitialization": true, /* Bắt buộc khởi tạo thuộc tính class */
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src" /* Thư mục chứa code JS sau khi build */
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
