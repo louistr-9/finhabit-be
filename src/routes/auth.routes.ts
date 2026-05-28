@@ -6,10 +6,17 @@ const router = Router();
 const authController = new AuthController();
 
 router.post("/register", (req, res, next) => authController.register(req, res, next));
-router.get("/me", authenticate, (req, res) => {
+router.get("/me", authenticate, async (req, res) => {
+    const PrismaClient = require('@prisma/client').PrismaClient;
+    const prisma = new PrismaClient();
+    const user = await prisma.user.findUnique({
+        where: { id: (req as any).user.userId }
+    });
+    if (!user) return res.status(404).json({ message: "Không tìm thấy user" });
+    const { password, ...userWithoutPassword } = user;
     res.json({
         message: "Bảo vệ API thành công!",
-        user: (req as any).user
+        user: userWithoutPassword
     });
 });
 router.post("/login", (req, res, next) => authController.login(req, res, next));
