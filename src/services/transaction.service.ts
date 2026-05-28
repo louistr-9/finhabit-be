@@ -4,9 +4,9 @@ const prisma = new PrismaClient();
 
 export class TransactionService {
 
-    async createTransaction(userId: string, amount: number, type: string, category: string, description?: string) {
+    async createTransaction(userId: string, amount: number, type: string, categoryId: string, description?: string) {
         return await prisma.transaction.create({
-            data: { userId, amount, type, category, description }
+            data: { userId, amount, type, categoryId, description }
         });
     }
 
