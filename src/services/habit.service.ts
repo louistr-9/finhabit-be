@@ -39,7 +39,7 @@ export class HabitService {
         today.setUTCHours(0, 0, 0, 0);
 
         const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
+        yesterday.setUTCDate(today.getUTCDate() - 1);
 
         const habitsWithStats = habits.map(habit => {
             let currentStreak = 0;
@@ -59,7 +59,7 @@ export class HabitService {
                     for (const log of habit.logs) {
                         if (log.date.getTime() === expectedDate.getTime()) {
                             currentStreak++; 
-                            expectedDate.setDate(expectedDate.getDate() - 1); 
+                            expectedDate.setUTCDate(expectedDate.getUTCDate() - 1); 
                         } else {
                             break; 
                         }

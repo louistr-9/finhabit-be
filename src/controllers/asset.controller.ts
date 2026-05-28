@@ -52,7 +52,7 @@ export class AssetController {
 
     async getLivePrice(req: Request, res: Response, next: NextFunction) {
         try {
-            const symbol = req.query.symbol as string as string;
+            const symbol = req.query.symbol as string;
             // Fake giá live
             let price = 0;
             if (symbol === "SJC") price = 85000000;
