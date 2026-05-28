@@ -37,7 +37,7 @@ export class DebtController {
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req as any).user.userId;
-            const debtId = req.params.id;
+            const debtId = req.params.id as string;
 
             await debtService.deleteDebt(userId, debtId);
 

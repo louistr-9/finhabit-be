@@ -37,7 +37,7 @@ export class RecurringController {
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req as any).user.userId;
-            const id = req.params.id;
+            const id = req.params.id as string;
 
             await recurringService.deleteRecurring(userId, id);
 

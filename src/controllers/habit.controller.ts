@@ -40,7 +40,7 @@ export class HabitController {
     async deleteHabit(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req as any).user.userId;
-            const habitId = req.params.id;
+            const habitId = req.params.id as string;
 
             await habitService.deleteHabit(userId, habitId);
 
@@ -57,7 +57,7 @@ export class HabitController {
     async toggleCheckIn(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = (req as any).user.userId;
-            const habitId = req.params.id;
+            const habitId = req.params.id as string;
             const { date } = req.body;
 
             const result = await habitService.toggleCheckIn(userId, habitId, date);

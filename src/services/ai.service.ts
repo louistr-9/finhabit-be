@@ -142,8 +142,8 @@ Câu chat của sếp: "${input}"`;
                     data: {
                         userId,
                         title: result.data.title,
-                        description: `(AI Bot) ${result.data.title}`,
                         amount: result.data.amount,
+                        category: result.data.category,
                         type: result.data.transactionType
                     }
                 });
@@ -154,8 +154,8 @@ Câu chat của sếp: "${input}"`;
                         data: {
                             userId,
                             title: t.title,
-                            description: `(AI Bot) ${t.title}`,
                             amount: t.amount,
+                            category: t.category,
                             type: t.transactionType
                         }
                     });

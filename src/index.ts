@@ -4,8 +4,6 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import { errorHandler } from "./middlewares/error.middleware";
 import transactionRoutes from "./routes/transaction.routes";
-
-import dotenv from "dotenv";
 dotenv.config();
 
 import "./services/telegram.service"; // Khởi động Telegram Bot (Lắng nghe /start)

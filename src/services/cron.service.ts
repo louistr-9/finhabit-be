@@ -91,15 +91,15 @@ export class CronService {
                                 userId: recurring.userId,
                                 amount: recurring.amount,
                                 type: recurring.type,
-                                categoryId: recurring.categoryId,
-                                description: `(Tự động) ${recurring.name}`
+                                category: recurring.category,
+                                title: `(Tự động) ${recurring.title}`
                             }
                         });
 
                         // 2. Gửi tin nhắn Telegram báo hỉ / báo nợ
                         const typeEmoji = recurring.type === "INCOME" ? "💰" : "💸";
                         const actionText = recurring.type === "INCOME" ? "vừa được cộng" : "vừa bị trừ";
-                        const message = `🤖 <b>FinHabit Tự Động</b>\n\nSếp ${actionText} <b>${recurring.amount.toLocaleString("vi-VN")}đ</b> cho khoản: <i>${recurring.name}</i>.\n\nHệ thống đã tự động ghi nhận vào sổ thu chi! ${typeEmoji}`;
+                        const message = `🤖 <b>FinHabit Tự Động</b>\n\nSếp ${actionText} <b>${recurring.amount.toLocaleString("vi-VN")}đ</b> cho khoản: <i>${recurring.title}</i>.\n\nHệ thống đã tự động ghi nhận vào sổ thu chi! ${typeEmoji}`;
                         
                         await telegramService.sendMessage(recurring.userId, message);
                     }

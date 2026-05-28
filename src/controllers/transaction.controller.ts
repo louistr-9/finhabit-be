@@ -44,7 +44,7 @@ export class TransactionController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const userID = (req as any).user.userId;
-      const transactionID = req.params.id as string;
+      const transactionID = req.params.id as string as string;
       const updateData = req.body;
       const updateTransaction = await transactionService.updateTransaction(
         userID,
@@ -63,7 +63,7 @@ export class TransactionController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const userID = (req as any).user.userId;
-      const transactionID = req.params.id as string;
+      const transactionID = req.params.id as string as string;
 
       await transactionService.deleteTransaction(
         userID,
