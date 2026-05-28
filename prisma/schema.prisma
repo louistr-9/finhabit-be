@@ -8,25 +8,48 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  password  String
-  transactions  Transaction[]
+  id             String   @id @default(uuid())
+  email          String   @unique
+  name           String
+  password       String
+  
+  // Thông tin thêm từ Mongoose
+  avatarUrl      String?
+  initialBalance Float @default(0)
+  monthlyBudget  Float @default(5000000)
+
+  // AI & Bot config
+  telegramChatId String?
+  discordUserId  String?
+  geminiApiKey   String?
+  
+  transactions Transaction[]
+  habits       Habit[]
+  habitLogs    HabitLog[]
+  assets       Asset[]
+  debts        Debt[]
+  recurringTransactions RecurringTransaction[]
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Transaction {
   id          String   @id @default(uuid())
+  title       String
   amount      Float
-  type        String
-  categoryId  String?
-  category    Category?     @relation(fields: [categoryId], references: [id])
-  description String?
+  category    String
+  type        String   // income, expense, saving
+  date        DateTime @default(now())
+  
+  assetId     String?
+  asset       Asset?   @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  
+  debtId      String?
+  debt        Debt?    @relation(fields: [debtId], references: [id], onDelete: SetNull)
 
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -36,6 +59,108 @@ model Category {
   id          String        @id @default(uuid())
   name        String
   type        String
+  // Giữ lại model này cho Backward compatibility với Backend API cũ
+}
 
-  transactions Transaction[] 
+model Habit {
+  id          String   @id @default(uuid())
+  name        String
+  icon        String?
+  color       String?
+  description String?
+  groupName   String?
+  unit        String   @default("lần")
+  goalValue   Float    @default(1)
+  reminderTime String?
+  frequency   Json?    @default("{\"type\":\"daily\"}")
+  linkedFinanceCategory String?
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  logs        HabitLog[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HabitLog {
+  id          String   @id @default(uuid())
+  date        DateTime 
+  completed   Boolean  @default(true)
+
+  habitId     String
+  habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([habitId, date])
+}
+
+model Asset {
+  id            String   @id @default(uuid())
+  name          String   
+  type          String   // real_estate, cash, gold, stock, crypto, saving, other
+  symbol        String?  
+  value         Float    @default(0) 
+  purchasePrice Float    @default(0) // Khớp với mongoose
+  quantity      Float?   
+  description   String?  // Khớp với mongoose
+  targetAmount  Float?   // Khớp với mongoose
+  targetDate    DateTime? // Khớp với mongoose
+  
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions  Transaction[] 
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Debt {
+  id          String   @id @default(uuid())
+  type        String   // borrowed, lent
+  contactName String   // Đổi từ name sang contactName khớp với Mongoose
+  amount      Float    
+  paidAmount  Float    @default(0) // Từ Mongoose
+  date        DateTime @default(now()) // Từ Mongoose
+  dueDate     DateTime? // Từ Mongoose
+  notes       String?   // Từ Mongoose
+  groupName   String?   // Từ Mongoose
+  status      String   @default("active") // active, completed
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model RecurringTransaction {
+  id              String   @id @default(uuid())
+  title           String   
+  amount          Float
+  category        String
+  type            String   // income, expense, saving
+  
+  frequency       String   
+  dayOfMonth      Int?     
+  dayOfWeek       Int?     
+  
+  isActive        Boolean  @default(true)
+  lastAppliedDate String?  
+  assetId         String?
+  
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

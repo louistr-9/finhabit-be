@@ -7,10 +7,10 @@ export class TransactionController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { amount, type, categoryId, description } = req.body;
+      const { title, amount, type, category, date } = req.body;
       const userId = (req as any).user.userId;
 
-      const transaction = await transactionService.createTransaction(userId, amount, type, categoryId, description);
+      const transaction = await transactionService.createTransaction(userId, title, amount, type, category, date ? new Date(date) : undefined);
 
       res.status(201).json({
         success: true,
@@ -92,4 +92,3 @@ export class TransactionController {
   }
 
 }
-

@@ -4,9 +4,9 @@ const prisma = new PrismaClient();
 
 export class TransactionService {
 
-    async createTransaction(userId: string, amount: number, type: string, categoryId: string, description?: string) {
+    async createTransaction(userId: string, title: string, amount: number, type: string, category: string, date?: Date) {
         return await prisma.transaction.create({
-            data: { userId, amount, type, categoryId, description }
+            data: { userId, title, amount, type, category, date: date || new Date() }
         });
     }
 
@@ -30,12 +30,7 @@ export class TransactionService {
             where: whereCondition,
             skip: skip,
             take: limit,
-            orderBy: { createdAt: 'desc' },
-            include: {
-                category: {
-                    select: { name: true }
-                }
-            }
+            orderBy: { date: 'desc' }
         });
 
         const totalRecords = await prisma.transaction.count({
@@ -102,9 +97,9 @@ export class TransactionService {
         let totalExpense = 0;
 
         stats.forEach(item => {
-            if (item.type === "INCOME") {
+            if (item.type === "income") {
                 totalIncome = item._sum.amount || 0;
-            } else if (item.type === "EXPENSE") {
+            } else if (item.type === "expense") {
                 totalExpense = item._sum.amount || 0;
             }
         });

@@ -9,6 +9,7 @@ describe("API Testing: Transaction Routes", () => {
         const hackerPayload = {
             amount: 9999999,
             description: "Hacked!"
+            description: "Hacked!"
         };
 
         const response = await request(app)
@@ -17,7 +18,7 @@ describe("API Testing: Transaction Routes", () => {
 
         expect(response.status).toBe(401);
 
-        expect(response.body.message).toBe("Không có token truy cập");
+        expect(response.body.message).toBe("Không tìm thấy token đăng nhập");
     });
 
 });

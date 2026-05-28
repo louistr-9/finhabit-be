@@ -13,5 +13,6 @@ router.get("/me", authenticate, (req, res) => {
     });
 });
 router.post("/login", (req, res, next) => authController.login(req, res, next));
+router.put("/profile", (req, res, next) => authController.syncProfile(req, res, next));
 
 export default router;
